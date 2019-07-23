@@ -54,7 +54,8 @@ def train(args, dataset, generator, discriminator):
     adjust_lr(g_optimizer, args.lr.get(resolution, 0.001))
     adjust_lr(d_optimizer, args.lr.get(resolution, 0.001))
 
-    pbar = tqdm(range(3_000_000))
+    pbar = tqdm(range(100_000))
+    # pbar = tqdm(range(3_000_000))
 
     requires_grad(generator, False)
     requires_grad(discriminator, True)
@@ -260,7 +261,7 @@ if __name__ == '__main__':
     )
     parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
     parser.add_argument('--sched', action='store_true', help='use lr scheduling')
-    parser.add_argument('--init_size', default=8, type=int, help='initial image size')
+    parser.add_argument('--init_size', default=1024, type=int, help='initial image size')
     parser.add_argument('--max_size', default=1024, type=int, help='max image size')
     parser.add_argument(
         '--mixing', action='store_true', help='use mixing regularization'
@@ -274,9 +275,10 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-
-    generator = nn.DataParallel(StyledGenerator(code_size)).cuda()
-    discriminator = nn.DataParallel(Discriminator()).cuda()
+    generator = StyledGenerator(code_size)
+    generator.load_state_dict(torch.load('checkpoint/180000.model'))
+    generator = nn.DataParallel(generator).cuda()
+    discriminator = nn.DataParallel(Discriminator(generator)).cuda()
     g_running = StyledGenerator(code_size).cuda()
     g_running.train(False)
 
@@ -316,6 +318,16 @@ if __name__ == '__main__':
 
     args.gen_sample = {512: (8, 4), 1024: (4, 2)}
 
-    args.batch_default = 32
+    args.batch_default = 2
 
     train(args, dataset, generator, discriminator)
+    torch.save(
+                {
+                    'generator': generator.module.state_dict(),
+                    'discriminator': discriminator.module.state_dict(),
+                    'g_optimizer': g_optimizer.state_dict(),
+                    'd_optimizer': d_optimizer.state_dict(),
+                    'g_running': g_running.state_dict()
+                },
+                f'checkpoint/done.model',
+            )

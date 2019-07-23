@@ -6,7 +6,7 @@ from model import StyledGenerator
 device = 'cuda'
 
 generator = StyledGenerator(512).to(device)
-generator.load_state_dict(torch.load('checkpoint/180000.model'))
+generator.load_state_dict(torch.load('checkpoint/train_step-2.model')['generator'])
 generator.eval()
 
 mean_style = None
@@ -70,5 +70,5 @@ with torch.no_grad():
         images = torch.cat(images, 0)
 
         utils.save_image(
-            images, f'sample_mixing_{j}.png', nrow=6, normalize=True, range=(-1, 1)
+            images, f'generated/sample_mixing_{j}.png', nrow=6, normalize=True, range=(-1, 1)
         )
