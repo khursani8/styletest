@@ -6,7 +6,7 @@ from model import StyledGenerator
 device = 'cuda'
 
 generator = StyledGenerator(512).to(device)
-generator.load_state_dict(torch.load('checkpoint/train_step-2.model')['generator'])
+generator.load_state_dict(torch.load('checkpoint/done.model')['generator'])
 generator.eval()
 
 mean_style = None
