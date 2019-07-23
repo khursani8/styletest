@@ -40,3 +40,4 @@ Model & Optimizer checkpoints saved at the end of phases of each resolution. (th
 ![Style mixing sample of the model trained on FFHQ](doc/sample_mixing_ffhq_new.png)
 
 512px sample from the generator trained on FFHQ.
+# styletest
