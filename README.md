@@ -41,3 +41,4 @@ Model & Optimizer checkpoints saved at the end of phases of each resolution. (th
 
 512px sample from the generator trained on FFHQ.
 # styletest
+# styletest
