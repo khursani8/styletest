@@ -266,8 +266,8 @@ if __name__ == '__main__':
     )
     parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
     parser.add_argument('--sched', action='store_true', help='use lr scheduling')
-    parser.add_argument('--init_size', default=256, type=int, help='initial image size')
-    parser.add_argument('--max_size', default=256, type=int, help='max image size')
+    parser.add_argument('--init_size', default=8, type=int, help='initial image size')
+    parser.add_argument('--max_size', default=128, type=int, help='max image size')
     parser.add_argument(
         '--mixing', action='store_true', help='use mixing regularization'
     )
@@ -323,7 +323,7 @@ if __name__ == '__main__':
 
     args.gen_sample = {512: (8, 4), 1024: (4, 2)}
 
-    args.batch_default = 8
+    args.batch_default = 16
 
     train(args, dataset, generator, discriminator)
     torch.save(
