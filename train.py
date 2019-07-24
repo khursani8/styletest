@@ -16,6 +16,11 @@ from torchvision import datasets, transforms, utils
 from dataset import MultiResolutionDataset
 from model import StyledGenerator, Discriminator
 
+# try:
+#     from apex import amp
+#     APEX_AVAILABLE = True
+# except ModuleNotFoundError:
+#     APEX_AVAILABLE = False
 
 def requires_grad(model, flag=True):
     for p in model.parameters():
@@ -276,7 +281,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     generator = StyledGenerator(code_size)
-    generator.load_state_dict(torch.load('checkpoint/180000.model'))
+    # generator.load_state_dict(torch.load('checkpoint/180000.model'))
     generator = nn.DataParallel(generator).cuda()
     discriminator = nn.DataParallel(Discriminator(generator)).cuda()
     g_running = StyledGenerator(code_size).cuda()
